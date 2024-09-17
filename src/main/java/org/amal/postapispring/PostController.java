@@ -31,13 +31,37 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<Post> getPostById(@PathVariable int postId){
+  public ResponseEntity<?> getPostById(@PathVariable int postId){
     for(Post post: postList){
       if(post.getId() == postId){
         return ResponseEntity.status(HttpStatus.OK).body(post);
       }
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT FOUND");
+  }
+
+  @DeleteMapping("/{postId}")
+  public ResponseEntity<?> deletePostById(@PathVariable int postId){
+    for(Post post: postList){
+      if(post.getId() == postId){
+        postList.remove(post);
+        return ResponseEntity.status(HttpStatus.OK).body(post);
+      }
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT FOUND");
+  }
+
+
+  @PatchMapping("/{postId}")
+  public ResponseEntity<?> updatePostById(@PathVariable int postId, @RequestBody Post updatedPost){
+    for(Post post: postList){
+      if(post.getId() == postId){
+        postList.remove(post);
+        postList.add(updatedPost);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedPost);
+      }
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT FOUND");
   }
 
 }

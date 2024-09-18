@@ -1,5 +1,6 @@
 package org.amal.postapispring;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,19 +13,25 @@ import java.util.List;
 public class PostController {
 
   private List<Post> postList;
+  private PostService postService1;
+  private PostService postService2;
 
-  public PostController(){
+
+  public PostController(@Qualifier("fakePostService") PostService postService1, @Qualifier("anotherPostService") PostService postService2){
+    this.postService1 = postService1;
+    this.postService2 = postService2;
     postList = new ArrayList<>();
     postList.add(new Post(1, "Post 1", "Post Body 1", 1));
     postList.add(new Post(2, "Post 2", "Post Body 2", 1));
   }
 
-  @GetMapping("/")
+  @GetMapping("")
   public ResponseEntity<List<Post>> getAllPost(){
+    System.out.println("PostService: " + postService2.doSomething());
     return ResponseEntity.status(HttpStatus.OK).body(postList);
   }
 
-  @PostMapping("/")
+  @PostMapping("")
   public ResponseEntity<Post> createPost(@RequestBody Post post){
     postList.add(post);
     return ResponseEntity.status(HttpStatus.CREATED).body(post);
